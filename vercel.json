@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "functions": {
+    "api/ai.js": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/data/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300"
+        }
+      ]
+    }
+  ]
+}

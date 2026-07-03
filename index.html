@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reading Room</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar" aria-label="Goodreads import">
+        <div>
+          <p class="kicker">Goodreads Import</p>
+          <h1>Your Reading Room</h1>
+        </div>
+        <form class="profile-form" id="profileForm">
+          <label for="profileUrl">Goodreads profile or shelf URL</label>
+          <div class="profile-row">
+            <input
+              id="profileUrl"
+              type="url"
+              value="https://www.goodreads.com/review/list/187591198?shelf=read"
+              autocomplete="off"
+            />
+            <button type="submit">Preview scrape</button>
+          </div>
+          <p id="syncStatus" class="sync-status">Loaded from the existing Google Sheet export.</p>
+        </form>
+      </section>
+
+      <nav class="app-nav" aria-label="Primary">
+        <button class="active" type="button" data-page="books">Books</button>
+        <button type="button" data-page="librarian">Librarian</button>
+      </nav>
+
+      <section class="library-panel app-page active" id="booksPage" data-page-panel="books">
+        <div class="library-toolbar">
+          <div>
+            <p class="kicker">Library</p>
+            <h2 id="resultCount">0 books</h2>
+          </div>
+          <div class="toolbar-actions">
+            <div class="summary-strip" aria-label="Library summary">
+              <span><strong id="totalBooks">0</strong> books</span>
+              <span><strong id="fiveStars">0</strong> loved</span>
+              <span><strong id="reviewedBooks">0</strong> reviewed</span>
+              <span><strong id="topCategory">-</strong> top shelf</span>
+            </div>
+            <button class="filter-button" id="filterButton" type="button" aria-expanded="false" aria-controls="filterDrawer">
+              Filters <span id="filterCount">0</span>
+            </button>
+            <div class="view-toggle" aria-label="View mode">
+              <button class="active" type="button" data-view="shelf">Shelf</button>
+              <button type="button" data-view="grid">Grid</button>
+              <button type="button" data-view="timeline">Timeline</button>
+              <button type="button" data-view="duration">Duration</button>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-controls" id="timelineControls" hidden>
+          <div>
+            <p class="kicker">Timeline Window</p>
+            <strong id="timelineRangeLabel">All reading dates</strong>
+          </div>
+          <div class="timeline-actions">
+            <button type="button" data-zoom="all">All</button>
+            <button type="button" data-zoom="year">Year</button>
+            <button type="button" data-zoom="quarter">Quarter</button>
+            <button type="button" data-pan="-1">Earlier</button>
+            <button type="button" data-pan="1">Later</button>
+          </div>
+        </div>
+        <div id="quickInsight" class="quick-insight"></div>
+        <div id="library" class="library shelf-view" aria-live="polite"></div>
+      </section>
+
+      <section class="librarian-page app-page" id="librarianPage" data-page-panel="librarian" aria-label="AI reading companion">
+        <aside class="librarian-rail">
+          <p class="kicker">AI Librarian</p>
+          <h2>Talk to the shelf</h2>
+          <p id="aiStatus">Ask about your reading history, patterns, recent books, or next reads.</p>
+          <div class="librarian-stats">
+            <span><strong id="aiTotalBooks">0</strong> scraped books</span>
+              <span><strong id="aiFiveStars">0</strong> five-star reads</span>
+            <span><strong id="aiReviewedBooks">0</strong> with notes</span>
+          </div>
+        </aside>
+
+        <section class="chat-shell">
+          <div class="prompt-chips" aria-label="Preset librarian prompts">
+            <button type="button" data-ai-action="snapshot">Library snapshot</button>
+            <button type="button" data-ai-action="recent">Recently read</button>
+            <button type="button" data-ai-action="trends">Taste trends</button>
+            <button type="button" data-ai-action="recommendations">Find next reads</button>
+          </div>
+
+          <div class="chat-log" id="chatLog" aria-live="polite">
+            <article class="chat-message assistant">
+              <span>Librarian</span>
+              <div>
+                <p>I can read across the shelf, compare ratings, spot patterns, and suggest what to explore next.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="followup-chips" id="followupChips" aria-label="Suggested follow-ups"></div>
+
+          <form class="chat-composer" id="aiQuestionForm">
+            <label for="aiQuestion">Message the librarian</label>
+            <div>
+              <input id="aiQuestion" type="text" placeholder="Ask about trends, recent reads, or what to pick up next..." />
+              <button type="submit">Send</button>
+            </div>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <div class="scrim" id="scrim" hidden></div>
+
+    <aside class="filter-drawer" id="filterDrawer" aria-label="Filters" aria-hidden="true">
+      <div class="drawer-head">
+        <div>
+          <p class="kicker">Tune Shelf</p>
+          <h2>Filters</h2>
+        </div>
+        <button class="icon-button" id="closeFilters" type="button" aria-label="Close filters">×</button>
+      </div>
+
+      <div class="control-block">
+        <label for="searchInput">Search</label>
+        <input id="searchInput" type="search" placeholder="Title, author, series..." />
+      </div>
+
+      <div class="control-block">
+        <label for="categoryFilter">Shelf</label>
+        <select id="categoryFilter"></select>
+      </div>
+
+      <div class="control-block">
+        <label for="ratingFilter">Minimum rating</label>
+        <select id="ratingFilter">
+          <option value="0">Any rating</option>
+          <option value="5">5 stars only</option>
+          <option value="4">4 stars and up</option>
+          <option value="3">3 stars and up</option>
+        </select>
+      </div>
+
+      <div class="control-block">
+        <label for="sortSelect">Sort</label>
+        <select id="sortSelect">
+          <option value="category">Category shelf order</option>
+              <option value="rating">Highest user rating</option>
+          <option value="delta">Biggest Goodreads disagreement</option>
+          <option value="date">Most recently read</option>
+          <option value="author">Author</option>
+        </select>
+      </div>
+
+      <div class="switches">
+        <label><input id="reviewedOnly" type="checkbox" /> Has review text</label>
+        <label><input id="romanceOnly" type="checkbox" /> Romance flagged</label>
+        <label><input id="fantasyOnly" type="checkbox" /> Fantasy/paranormal flagged</label>
+        <label><input id="darkOnly" type="checkbox" /> Dark/thriller flagged</label>
+      </div>
+
+      <button class="clear-button" id="clearFilters" type="button">Clear filters</button>
+    </aside>
+
+    <section class="book-route" id="bookRoute" aria-modal="true" role="dialog" aria-hidden="true">
+      <div id="bookDetail" class="book-detail"></div>
+    </section>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

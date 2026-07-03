@@ -1,0 +1,15 @@
+{
+  "name": "reading-room",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A Goodreads-powered reading exploration prototype with an AI librarian.",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "check": "node --check app.js && node --check server.js && node --check api/ai.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
