@@ -6,6 +6,11 @@ Reading Room turns a public Goodreads shelf export into a visual bookshelf, read
 
 The bundled seed data is a real starter dataset from one reader's Goodreads read shelf. The app copy is intentionally generic so the product can later support any Goodreads profile.
 
+## Live Prototype
+
+- Vercel: https://reading-room-pbutnqp8s-markmanventures.vercel.app
+- GitHub: https://github.com/nmarkman/reading-room
+
 ## Features
 
 - Cover-forward shelf view grouped by inferred reading category.
@@ -34,6 +39,8 @@ This repo is Vercel-ready:
 - Set `ANTHROPIC_API_KEY` in Vercel project environment variables.
 
 The serverless function reads `data/lindsay-goodreads-read.csv` as seed data. Future work should replace that static CSV with an import/sync flow from a provided Goodreads profile URL.
+
+Current deployment note: this project was deployed to Vercel through the REST API because the Vercel GitHub integration is not yet installed for the account. Once that integration is connected, the public `nmarkman/reading-room` repo can be imported so future pushes auto-deploy.
 
 ## Data Contract
 
